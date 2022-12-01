@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-const initialState = { books: null, isLoading: false };
+const initialState = { books: [], isLoading: false, error: null };
 
 // fire = techta8al
 // this function we return three types of functions:
@@ -12,6 +12,7 @@ export const getBooks = createAsyncThunk(
   "book/getBooks",
   //   args : if you send data in parametres of deipatch we store this data in this parameters (args, can be rename any other name)
   async (args, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI
     try {
       // part 2
       //dispatch({type:'book/getBooks/pending', payload: undefined})
@@ -20,7 +21,7 @@ export const getBooks = createAsyncThunk(
       return data;
       //dispatch({type:'book/getBooks/fulfilled', payload: data})
     } catch (error) {
-      console.log(error);
+      return rejectWithValue(error.message);
       //dispatch({type:'book/getBooks/rejected', payload: error})
     }
   }
@@ -41,6 +42,7 @@ const bookSlice = createSlice({
   extraReducers: {
     [getBooks.pending]: (state, action) => {
       state.isLoading = true;
+      state.error= null;
       //   console.log(action);
     },
     [getBooks.fulfilled]: (state, action) => {
@@ -51,6 +53,7 @@ const bookSlice = createSlice({
     [getBooks.rejected]: (state, action) => {
       //   console.log(action);
       state.isLoading = false;
+      state.error = action.payload
     },
   },
 });
