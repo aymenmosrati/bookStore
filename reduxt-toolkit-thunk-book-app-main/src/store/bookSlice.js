@@ -33,6 +33,29 @@ export const getBooks = createAsyncThunk(
 // fulfilled createAction('book/getBooks/pending', (payload) =>{return payload})
 // rejected createAction('book/getBooks/pending', (payload) =>{return payload})
 
+export const insertBook = createAsyncThunk(
+  'book/getBooks',
+  async (bookData, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI
+    // {id:1}= objet 
+    // {"id": "1"}= json
+    try {
+      const res = await fetch('http://localhost:4000/books', {
+        method: 'POST',
+        body: JSON.stringify(bookData),
+        headers: {
+          'Content-Type': 'application/json; charset=utf',
+        },
+      })
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+
 const bookSlice = createSlice({
   name: "book",
   initialState,
@@ -40,9 +63,10 @@ const bookSlice = createSlice({
   reducers: {},
   // accepted the acide function and asid effect API or GraphQL .....
   extraReducers: {
+    // get books
     [getBooks.pending]: (state, action) => {
       state.isLoading = true;
-      state.error= null;
+      state.error = null;
       //   console.log(action);
     },
     [getBooks.fulfilled]: (state, action) => {
@@ -51,6 +75,23 @@ const bookSlice = createSlice({
       state.books = action.payload;
     },
     [getBooks.rejected]: (state, action) => {
+      //   console.log(action);
+      state.isLoading = false;
+      state.error = action.payload
+    },
+
+    // insert books
+    [insertBook.pending]: (state, action) => {
+      state.isLoading = true;
+      state.error = null;
+      //   console.log(action);
+    },
+    [insertBook.fulfilled]: (state, action) => {
+      //   console.log(action);
+      state.isLoading = false;
+      state.books.push(action.payload);
+    },
+    [insertBook.rejected]: (state, action) => {
       //   console.log(action);
       state.isLoading = false;
       state.error = action.payload
