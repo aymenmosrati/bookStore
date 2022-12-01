@@ -1,16 +1,25 @@
 {
-    "books": [
-        {
-            "id": 1,
-            "title": "learn react",
-            "description": "learn react from scratch",
-            "price": 30
-        },
-        {
-            "id": 1,
-            "title": "learn js",
-            "description": "learn js from scratch",
-            "price": 40
-        }
-    ]
+  "books": [
+    {
+      "title": "learn laravel",
+      "price": "20",
+      "description": "create first app with laravel",
+      "userName": "aymn msrt",
+      "id": 1
+    },
+    {
+      "title": "learn nodejs ",
+      "price": "35",
+      "description": "create fullstack js web application ",
+      "userName": "aymn msrt",
+      "id": 2
+    },
+    {
+      "title": "learn reactjs ",
+      "price": "45",
+      "description": "building user interface with reactjs",
+      "userName": "aymn msrt",
+      "id": 3
+    }
+  ]
 }

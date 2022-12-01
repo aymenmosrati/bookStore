@@ -12,7 +12,7 @@ export const getBooks = createAsyncThunk(
   "book/getBooks",
   //   args : if you send data in parametres of deipatch we store this data in this parameters (args, can be rename any other name)
   async (args, thunkAPI) => {
-    const { rejectWithValue } = thunkAPI
+    const { rejectWithValue } = thunkAPI;
     try {
       // part 2
       //dispatch({type:'book/getBooks/pending', payload: undefined})
@@ -34,19 +34,22 @@ export const getBooks = createAsyncThunk(
 // rejected createAction('book/getBooks/pending', (payload) =>{return payload})
 
 export const insertBook = createAsyncThunk(
-  'book/getBooks',
+  "book/insertBook",
   async (bookData, thunkAPI) => {
-    const { rejectWithValue } = thunkAPI
-    // {id:1}= objet 
+    const { rejectWithValue, getState } = thunkAPI;
+    // {id:1}= objet
     // {"id": "1"}= json
     try {
-      const res = await fetch('http://localhost:4000/books', {
-        method: 'POST',
+      // console.log(getState());
+      // add username in object(json) in server and add name
+      bookData.userName = getState().auth.name;
+      const res = await fetch("http://localhost:4000/books", {
+        method: "POST",
         body: JSON.stringify(bookData),
         headers: {
-          'Content-Type': 'application/json; charset=utf',
+          "Content-Type": "application/json; charset=UTF-8",
         },
-      })
+      });
       const data = await res.json();
       return data;
     } catch (error) {
@@ -55,6 +58,23 @@ export const insertBook = createAsyncThunk(
   }
 );
 
+export const deleteBook = createAsyncThunk(
+  "book/deleteBook",
+  async (item, thunkAPI) => {
+    const { rejectWithValue, getState } = thunkAPI;
+    try {
+      const res = await fetch(`http://localhost:4000/books/${item.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json; charset=UTF-8",
+        },
+      });
+      return item;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 const bookSlice = createSlice({
   name: "book",
@@ -77,7 +97,7 @@ const bookSlice = createSlice({
     [getBooks.rejected]: (state, action) => {
       //   console.log(action);
       state.isLoading = false;
-      state.error = action.payload
+      state.error = action.payload;
     },
 
     // insert books
@@ -94,7 +114,26 @@ const bookSlice = createSlice({
     [insertBook.rejected]: (state, action) => {
       //   console.log(action);
       state.isLoading = false;
-      state.error = action.payload
+      state.error = action.payload;
+    },
+
+    // delete books
+    [deleteBook.pending]: (state, action) => {
+      state.isLoading = true;
+      state.error = null;
+      //   console.log(action);
+    },
+    [deleteBook.fulfilled]: (state, action) => {
+      // console.log(action.payload);
+      state.isLoading = false;
+      state.books = state.books.filter(
+        (element) => element.id !== action.payload.id
+      );
+    },
+    [deleteBook.rejected]: (state, action) => {
+      //   console.log(action);
+      state.isLoading = false;
+      state.error = action.payload;
     },
   },
 });
