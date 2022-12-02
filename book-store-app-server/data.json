@@ -1,25 +1,18 @@
 {
   "books": [
     {
-      "title": "learn laravel",
-      "price": "20",
-      "description": "create first app with laravel",
-      "userName": "aymn msrt",
+      "title": "learn nodejs ",
+      "price": "30",
+      "description": "learn backend development with nodejs express and mongodb \n",
+      "userName": "Ben Mouhamed ",
       "id": 1
     },
     {
-      "title": "learn nodejs ",
+      "title": "learn reactjs",
       "price": "35",
-      "description": "create fullstack js web application ",
-      "userName": "aymn msrt",
+      "description": "build user interface with react js ",
+      "userName": "Ben Mouhamed ",
       "id": 2
-    },
-    {
-      "title": "learn reactjs ",
-      "price": "45",
-      "description": "building user interface with reactjs",
-      "userName": "aymn msrt",
-      "id": 3
     }
   ]
 }

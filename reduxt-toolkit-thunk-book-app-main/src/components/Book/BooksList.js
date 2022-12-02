@@ -1,6 +1,13 @@
 import React from "react";
 
-const BooksList = ({ isLoading, books, isLoggedIn, dispatch, deleteBook }) => {
+const BooksList = ({
+  isLoading,
+  books,
+  isLoggedIn,
+  dispatch,
+  deleteBook,
+  getBookId,
+}) => {
   // ?. == books (if books != null)
   const booksList =
     books.length > 0
@@ -11,7 +18,11 @@ const BooksList = ({ isLoading, books, isLoggedIn, dispatch, deleteBook }) => {
           >
             <div>{items.title}</div>
             <div className="btn-group" role="group">
-              <button type="button" className="btn btn-primary">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => getBookId(items.id)}
+              >
                 Read
               </button>
               <button
@@ -29,12 +40,12 @@ const BooksList = ({ isLoading, books, isLoggedIn, dispatch, deleteBook }) => {
                     // .then and .catch : t3awe4 el try and catch wel (fulfiled w rejected)
                     .unwrap()
                     .then((originalPromiseResult) => {
-                      console.log(originalPromiseResult);
+                      // console.log(originalPromiseResult);
                       // handle result here
                       // ha4a behi kif t7eb ta3mel test 3al result ta3 el request wala t7eb ta3mel alert wala aya 7aja
                     })
                     .catch((rejectedValueOrSerializedError) => {
-                      console.log(rejectedValueOrSerializedError);
+                      // console.log(rejectedValueOrSerializedError);
                       // handle error here
                     })
                 }

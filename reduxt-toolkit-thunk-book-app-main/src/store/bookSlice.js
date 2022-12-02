@@ -1,6 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { logInsert } from "./reportSlice";
 
-const initialState = { books: [], isLoading: false, error: null };
+const initialState = {
+  books: [],
+  isLoading: false,
+  error: null,
+  bookInfo: null,
+};
 
 // fire = techta8al
 // this function we return three types of functions:
@@ -36,13 +42,15 @@ export const getBooks = createAsyncThunk(
 export const insertBook = createAsyncThunk(
   "book/insertBook",
   async (bookData, thunkAPI) => {
-    const { rejectWithValue, getState } = thunkAPI;
+    const { rejectWithValue, getState, dispatch } = thunkAPI;
     // {id:1}= objet
     // {"id": "1"}= json
     try {
       // console.log(getState());
       // add username in object(json) in server and add name
       bookData.userName = getState().auth.name;
+      // dispatch anothor function createasyncthunk
+      // dispatch(deleteBook({ id: 4 }));
       const res = await fetch("http://localhost:4000/books", {
         method: "POST",
         body: JSON.stringify(bookData),
@@ -51,8 +59,11 @@ export const insertBook = createAsyncThunk(
         },
       });
       const data = await res.json();
+      // dispatch action enternal inside createasyncthunk
+      dispatch(logInsert({ name: "isertBook", status: "success" }));
       return data;
     } catch (error) {
+      dispatch(logInsert({ name: "isertBook", status: "failed" }));
       return rejectWithValue(error.message);
     }
   }
@@ -62,6 +73,24 @@ export const deleteBook = createAsyncThunk(
   "book/deleteBook",
   async (item, thunkAPI) => {
     const { rejectWithValue, getState } = thunkAPI;
+    try {
+      const res = await fetch(`http://localhost:4000/books/${item.id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json; charset=UTF-8",
+        },
+      });
+      return item;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const getBook = createAsyncThunk(
+  "book/getBook",
+  async (item, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
     try {
       const res = await fetch(`http://localhost:4000/books/${item.id}`, {
         method: "DELETE",
@@ -134,6 +163,12 @@ const bookSlice = createSlice({
       //   console.log(action);
       state.isLoading = false;
       state.error = action.payload;
+    },
+
+    // read book
+    [getBook.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.bookInfo = action.payload;
     },
   },
 });
